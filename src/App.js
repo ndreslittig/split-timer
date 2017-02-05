@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import './App.css';
 import SplitTable from './components/SplitTable'
 import TimeTable from './components/TimeTable'
@@ -35,7 +35,12 @@ class App extends Component {
   setStateViaChild(key, value) {
     this.setState(() => ({
       [key] : value 
-    }), this.setStateDebug);
+    }), function() {
+      //dirty, dirty, dirty
+      this.refs.paceTable.calculatePaceViaParent();
+      //this.setStateDebug;
+
+    });
   }
 
   
@@ -95,6 +100,8 @@ class App extends Component {
     });
   }
 
+  //quick & dirty clear method
+  //race distance is lingering
   clear() {
     $(':input').val('');
     this.setState(() => ({

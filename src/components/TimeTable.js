@@ -3,7 +3,7 @@ import React from 'react';
 function TimeComponent(props) { //stateless functional component yo
 	return (
 		<div className="col-xs-4 form-group">
-		<input className="form-control" onChange={props.onChange} type="number" name={props.name} placeholder={props.abbrev} min="1" max={props.name=="hundredths" ? "99" : "59"}  />
+		<input className="form-control" onChange={props.onChange} type="number" name={props.name} placeholder={props.abbrev} min="1" max={props.name==="hundredths" ? "99" : "59"}  />
 		</div>
 	);
 }
@@ -29,7 +29,7 @@ export default class TimeTable extends React.Component {
 	handleChange(event) {
 		var ev = event.nativeEvent;
 		console.log(ev.target.name + " changed to " + ev.target.value + ", max: " + ev.target.max);
-		if(ev.target.name != "minutes") {
+		if(ev.target.name !== "minutes") {
 			ev.target.value = ("0" + Number(ev.target.value)).slice(-2);
 		}
 		this.setState(() => ({

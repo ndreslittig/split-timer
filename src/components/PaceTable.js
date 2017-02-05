@@ -1,8 +1,6 @@
 import React from 'react';
 
 function milliToTime(t) {
-	console.log("T is: ");
-	console.log(t);
     return new Date(t).toISOString().slice(15, -1);
 }
 
@@ -58,13 +56,34 @@ export default class TimeTable extends React.Component {
 		this.handleChange = this.handleChange.bind(this);
 	}
 
-	calculatePace() { //move up to app scope to allow for refreshing of pace info after changing either time or distance, not just distance
+	calculatePaceViaParent() {
 		if(this.props.totalTime > 0 && this.state.raceDistance > 0 && this.state.lapDistance > 0) {
-			console.log(this.props.totalTime+ ", "+ this.state.raceDistance + ", "+ this.state.lapDistance);
-			var remainder = this.state.raceDistance%this.state.lapDistance == 0 ? 0 : ((this.state.raceDistance-30) % this.state.lapDistance)+30; //account for mile+1500, quick way to get 1609m as 3x400m + 409m
+			//console.log(this.props.totalTime+ ", "+ this.state.raceDistance + ", "+ this.state.lapDistance);
+			var remainder = this.state.raceDistance%this.state.lapDistance === 0 ? 0 : ((this.state.raceDistance-30) % this.state.lapDistance)+30; //account for mile+1500, quick way to get 1609m as 3x400m + 409m
 			var rawPace = this.props.totalTime/this.state.raceDistance;
 			this.setState(() => ({
-				numLaps : Math.floor((this.state.raceDistance-(remainder == 0 ? 0 : 10))/this.state.lapDistance),
+				numLaps : Math.floor((this.state.raceDistance-(remainder === 0 ? 0 : 10))/this.state.lapDistance),
+				calculatedPace : this.state.lapDistance*rawPace,
+				remainder : remainder,
+				remainderPace : remainder*rawPace
+			}), console.log("Pace recalculated via parent."));
+		} else {
+			this.setState(() => ({
+				calculatedPace : 0,
+				lapDistance:400,
+				remainderPace: 0,
+				remainder : 0
+			}), console.log("Some stuff is zero. Didn't recalculate.") );	
+		}
+	}
+
+	calculatePace() { //move up to app scope to allow for refreshing of pace info after changing either time or distance, not just distance
+		if(this.props.totalTime > 0 && this.state.raceDistance > 0 && this.state.lapDistance > 0) {
+			//console.log(this.props.totalTime+ ", "+ this.state.raceDistance + ", "+ this.state.lapDistance);
+			var remainder = this.state.raceDistance%this.state.lapDistance === 0 ? 0 : ((this.state.raceDistance-30) % this.state.lapDistance)+30; //account for mile+1500, quick way to get 1609m as 3x400m + 409m
+			var rawPace = this.props.totalTime/this.state.raceDistance;
+			this.setState(() => ({
+				numLaps : Math.floor((this.state.raceDistance-(remainder === 0 ? 0 : 10))/this.state.lapDistance),
 				calculatedPace : this.state.lapDistance*rawPace,
 				remainder : remainder,
 				remainderPace : remainder*rawPace
@@ -75,10 +94,9 @@ export default class TimeTable extends React.Component {
 				lapDistance:400,
 				remainderPace: 0,
 				remainder : 0
-			}), console.log("Some stuff is zeros. Didn't recalculate.") );
+			}), console.log("Some stuff is zero. Didn't recalculate.") );
 			
 		}
-			
 	}
 
 	reportPace() {
@@ -105,7 +123,6 @@ export default class TimeTable extends React.Component {
 					<MeterInput onChange={this.handleChange} />
 					<LapInput onChange={this.handleChange} />
 			</div>
-
 			<CalculatedPace pace={this.state.calculatedPace} lapDistance={this.state.lapDistance} remainder={this.state.remainder} remainderPace={this.state.remainderPace} />
 			</div>
 		);

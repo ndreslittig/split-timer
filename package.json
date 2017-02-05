@@ -1,6 +1,7 @@
 {
   "name": "split-timer",
   "version": "0.1.0",
+  "homepage": "http://andreslittig.com/split-timer",
   "private": true,
   "devDependencies": {
     "react-scripts": "0.7.0"
