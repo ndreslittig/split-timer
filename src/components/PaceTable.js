@@ -56,7 +56,7 @@ export default class TimeTable extends React.Component {
 		this.handleChange = this.handleChange.bind(this);
 	}
 
-	calculatePaceViaParent() {
+	calculatePaceViaParent() { //quick and dirty solution to the below method not being visible from TimeTable/parent scope, called via parent using refs
 		if(this.props.totalTime > 0 && this.state.raceDistance > 0 && this.state.lapDistance > 0) {
 			//console.log(this.props.totalTime+ ", "+ this.state.raceDistance + ", "+ this.state.lapDistance);
 			var remainder = this.state.raceDistance%this.state.lapDistance === 0 ? 0 : ((this.state.raceDistance-30) % this.state.lapDistance)+30; //account for mile+1500, quick way to get 1609m as 3x400m + 409m
